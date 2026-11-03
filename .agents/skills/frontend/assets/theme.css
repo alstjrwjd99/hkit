@@ -1,0 +1,17 @@
+/* 앱에서 사용할 색상 토큰. 컴포넌트의 스타일은 레이아웃을 정한 뒤 적용한다. */
+:root {
+  --hkit-surface-key: #e5e7eb;
+  --hkit-surface: #ffffff;
+  --hkit-surface-secondary: #f5f6f8;
+  --hkit-ink: #171717;
+  --hkit-action: #1f2937;
+  --hkit-on-action: #ffffff;
+}
+
+:root[data-hkit-brand="sk-hynix"] {
+  --hkit-action: #ea002c;
+}
+
+:root[data-hkit-brand="krafton"] {
+  --hkit-action: #000000;
+}

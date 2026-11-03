@@ -1,0 +1,172 @@
+{
+  "schema_version": 1,
+  "status": "confirmed",
+  "revision": "D1",
+  "prd_revision": "P1",
+  "source": {
+    "path": "raw.csv"
+  },
+  "observations": {},
+  "constraints": [
+    {
+      "id": "D-REQ-1",
+      "status": "confirmed",
+      "columns": [
+        "observation_id"
+      ],
+      "rule": "required",
+      "parameters": {},
+      "ac_ids": [
+        "R2-AC1"
+      ],
+      "evidence": [
+        "prd-v1.json#required_ac"
+      ]
+    },
+    {
+      "id": "D-REQ-2",
+      "status": "confirmed",
+      "columns": [
+        "route"
+      ],
+      "rule": "required",
+      "parameters": {},
+      "ac_ids": [
+        "R2-AC1"
+      ],
+      "evidence": [
+        "prd-v1.json#required_ac"
+      ]
+    },
+    {
+      "id": "D-REQ-3",
+      "status": "confirmed",
+      "columns": [
+        "day"
+      ],
+      "rule": "required",
+      "parameters": {},
+      "ac_ids": [
+        "R2-AC1"
+      ],
+      "evidence": [
+        "prd-v1.json#required_ac"
+      ]
+    },
+    {
+      "id": "D-REQ-4",
+      "status": "confirmed",
+      "columns": [
+        "demand"
+      ],
+      "rule": "required",
+      "parameters": {},
+      "ac_ids": [
+        "R2-AC1"
+      ],
+      "evidence": [
+        "prd-v1.json#required_ac"
+      ]
+    },
+    {
+      "id": "D-REQ-5",
+      "status": "confirmed",
+      "columns": [
+        "wait_minutes"
+      ],
+      "rule": "required",
+      "parameters": {},
+      "ac_ids": [
+        "R2-AC1"
+      ],
+      "evidence": [
+        "prd-v1.json#required_ac"
+      ]
+    },
+    {
+      "id": "D-NUM-demand",
+      "status": "confirmed",
+      "columns": [
+        "demand"
+      ],
+      "rule": "type",
+      "parameters": {
+        "type": "number"
+      },
+      "ac_ids": [
+        "R2-AC1"
+      ],
+      "evidence": [
+        "prd-v1.json#required_ac"
+      ]
+    },
+    {
+      "id": "D-RANGE-demand",
+      "status": "confirmed",
+      "columns": [
+        "demand"
+      ],
+      "rule": "range",
+      "parameters": {
+        "min": "0"
+      },
+      "ac_ids": [
+        "R2-AC1"
+      ],
+      "evidence": [
+        "prd-v1.json#required_ac"
+      ]
+    },
+    {
+      "id": "D-NUM-wait_minutes",
+      "status": "confirmed",
+      "columns": [
+        "wait_minutes"
+      ],
+      "rule": "type",
+      "parameters": {
+        "type": "number"
+      },
+      "ac_ids": [
+        "R2-AC1"
+      ],
+      "evidence": [
+        "prd-v1.json#required_ac"
+      ]
+    },
+    {
+      "id": "D-RANGE-wait_minutes",
+      "status": "confirmed",
+      "columns": [
+        "wait_minutes"
+      ],
+      "rule": "range",
+      "parameters": {
+        "min": "0"
+      },
+      "ac_ids": [
+        "R2-AC1"
+      ],
+      "evidence": [
+        "prd-v1.json#required_ac"
+      ]
+    },
+    {
+      "id": "D-DATE",
+      "status": "confirmed",
+      "columns": [
+        "day"
+      ],
+      "rule": "date_format",
+      "parameters": {
+        "format": "%Y-%m-%d"
+      },
+      "ac_ids": [
+        "R2-AC1"
+      ],
+      "evidence": [
+        "prd-v1.json#period"
+      ]
+    }
+  ]
+}

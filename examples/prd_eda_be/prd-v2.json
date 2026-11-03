@@ -1,0 +1,30 @@
+{
+  "revision": "P2",
+  "kpi": {
+    "id": "K1",
+    "formula": "sum(demand * wait_minutes) / sum(demand)",
+    "unit": "minutes",
+    "direction": "lower"
+  },
+  "hypotheses": [
+    {
+      "id": "H1",
+      "claim": "Each observation_id represents one independent observation."
+    }
+  ],
+  "required_ac": [
+    "R1-AC1",
+    "R1-AC2",
+    "R2-AC1",
+    "R2-AC2"
+  ],
+  "input_policy": {
+    "grain": "observation_id",
+    "duplicates": "reject"
+  },
+  "period": {
+    "start": "2026-11-01",
+    "end": "2026-11-03"
+  },
+  "decision_id": "SIM-APPROVE-01"
+}

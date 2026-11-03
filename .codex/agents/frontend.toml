@@ -1,0 +1,7 @@
+name = "frontend"
+description = "확정된 계약을 소비하는 UI와 사용자 흐름 테스트를 독립적으로 구현한다."
+developer_instructions = """
+작업 루트의 AGENTS.md와 .agents/skills/frontend/SKILL.md를 읽고 따른다.
+부모가 지정한 AC, 확정 계약, FE 소유 경로에서 작업한다. 계약·공유 파일과 공통 검증 문서는 부모가 관리한다.
+인계에는 변경 파일, 재현 명령 또는 수동 E2E 절차, 실제 관찰 결과와 미검증 항목을 담는다.
+"""

@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>hkit · 버스 대기시간 검증</title>
+  <link rel="stylesheet" href="/theme.css">
+  <link rel="stylesheet" href="/app.css">
+  <script defer src="/app.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">본문으로 이동</a>
+  <header class="app-header">
+    <a class="wordmark" href="#main" aria-label="hkit 홈"><span class="brand-mark">h</span>hkit<span class="wordmark-sub">WORKSPACE</span></a>
+    <span class="project-name">버스 운영 분석 · 로컬 데모</span>
+    <nav aria-label="주요 영역">
+      <a class="nav-link active" href="#main">비교</a>
+      <a class="nav-link" href="#decision-section">판단</a>
+      <a class="nav-link" href="#data-section">계산</a>
+      <a class="nav-link" href="#verification-section">검증</a>
+    </nav>
+    <label class="theme-control">테마 <select id="theme" aria-label="브랜드 테마"><option value="neutral">중립</option><option value="sk-hynix">하이닉스</option><option value="krafton">크래프톤</option></select></label>
+  </header>
+
+  <div class="workspace">
+    <main id="main">
+      <div class="page-heading">
+        <div><h1>버스 대기시간 검증</h1><p>같은 KPI가 관측 단위 정책에 따라 달라집니다. 두 정책을 비교하고 적용할 계약을 고릅니다. <span class="period">평가 기간 <strong>2026.11.01 — 11.03</strong> · 합성 데이터 3행</span></p></div>
+        <ol class="pipeline" aria-label="작업 흐름">
+          <li><span class="step-number">01</span><div><strong>PRD P1</strong><small>행 단위로 집계</small></div></li>
+          <li><span class="step-number">02</span><div><strong>EDA</strong><small>중복 관측 1건</small></div></li>
+          <li id="decision-step"><span class="step-number">03</span><div><strong>사용자 판단</strong><small id="pipeline-decision">결정 대기</small></div></li>
+          <li><span class="step-number">04</span><div><strong id="pipeline-contract">P1 / D1</strong><small>현재 적용 계약</small></div></li>
+          <li><span class="step-number">05</span><div><strong>BE 검증</strong><small id="pipeline-result">실행 전</small></div></li>
+        </ol>
+      </div>
+      <div id="boot-status" class="boot-status" role="status">로컬 API에 연결하고 있습니다.</div>
+
+      <section class="finding" aria-label="EDA 발견"><span class="finding-number">EDA</span><div><strong>O2가 같은 값으로 두 번 집계됩니다.</strong> <span>독립 관측이면 P1을 유지하고, 수집 중복이면 P2로 고유 관측만 집계합니다.</span></div></section>
+
+      <!-- 핵심 판단은 두 정책의 비교라서 같은 모양의 열 두 개를 나란히 둔다 -->
+      <section id="compare-section" class="compare" aria-label="정책별 KPI 비교">
+        <article id="compare-p1" class="compare-col is-current">
+          <div class="compare-heading"><div><h2>P1 현재 규칙</h2><p>행마다 독립 관측 · 중복 허용</p></div><span class="plain-tag">원본 3행</span></div>
+          <div class="compare-kpi"><div class="live-value"><span id="baseline-value">—</span><small>분</small></div><span class="compare-detail" id="baseline-detail">API 계산 대기</span></div>
+          <table><caption class="sr-only">P1이 집계하는 원본 관측</caption><thead><tr><th scope="col">관측 ID</th><th scope="col">노선</th><th scope="col">날짜</th><th scope="col" class="numeric">수요 · 명</th><th scope="col" class="numeric">대기 · 분</th><th scope="col">관측 상태</th></tr></thead><tbody id="compare-raw"></tbody></table>
+        </article>
+        <article id="compare-p2" class="compare-col">
+          <div class="compare-heading"><div><h2>P2 제안</h2><p>관측 ID를 고유 키로 · 중복 거부</p></div><span class="plain-tag">승인 입력 2행</span></div>
+          <div class="compare-kpi"><div class="live-value"><span id="proposed-value">—</span><small>분</small></div><span class="compare-detail" id="proposed-detail">API 계산 대기</span></div>
+          <table><caption class="sr-only">P2가 집계하는 승인 입력</caption><thead><tr><th scope="col">관측 ID</th><th scope="col">노선</th><th scope="col">날짜</th><th scope="col" class="numeric">수요 · 명</th><th scope="col" class="numeric">대기 · 분</th><th scope="col">관측 상태</th></tr></thead><tbody id="compare-approved"></tbody></table>
+        </article>
+      </section>
+
+      <section id="decision-section" class="decision-bar" aria-label="관측 단위 판단">
+        <div class="decision-diff"><span>차이</span><strong><span id="difference-value">—</span> 분</strong><small>집계 대상과 KPI 기준선이 바뀝니다</small></div>
+        <div class="decision-actions"><button id="defer" class="secondary-button" type="button" disabled>보류</button><button id="reject" class="secondary-button" type="button" disabled>거절</button><button id="approve" class="primary-button" type="button" disabled>P2 적용</button></div>
+        <div class="decision-meta"><div class="decision-state" id="decision-state" role="status">결정 대기 · P1 / D1 유지</div><p class="panel-note">데모 안의 가상 판단이며 실제 제품 정책으로 저장되지 않습니다.</p></div>
+      </section>
+
+      <div class="content-grid">
+        <section id="data-section" class="panel" aria-labelledby="result-title">
+          <div class="panel-heading"><div><h2 id="result-title">BE 계산 · 현재 계약</h2><p class="section-description" id="data-description">동일한 관측 ID O2가 두 행에 있습니다. 수요와 대기시간을 수정해 경계값도 확인할 수 있습니다.</p></div><span class="revision-tag" id="current-revision">P1 / D1</span></div>
+          <div class="calc-grid">
+            <div>
+              <div class="data-toolbar"><div class="segmented" role="group" aria-label="입력 데이터 선택"><button id="raw-data" type="button" aria-pressed="true">원본 3행</button><button id="approved-data" type="button" aria-pressed="false">승인 입력 2행</button></div><span id="row-summary">데이터 로딩 중</span><button id="reset-data" class="text-button" type="button">입력 초기화 ↺</button></div>
+              <div class="formula">승객 가중 평균 <span>Σ(수요 × 대기시간) / Σ수요</span></div>
+              <details class="input-detail"><summary>입력 수정 · 수요와 대기시간 경계값 확인</summary>
+              <div class="table-scroll"><table><caption class="sr-only">계산에 보낼 입력. 수요와 대기시간은 수정할 수 있습니다.</caption><thead><tr><th scope="col">관측 ID</th><th scope="col">노선</th><th scope="col">날짜</th><th scope="col" class="numeric">수요 · 명</th><th scope="col" class="numeric">대기 · 분</th><th scope="col">관측 상태</th></tr></thead><tbody id="data-body"></tbody></table></div></details>
+            </div>
+            <div class="calc-result">
+              <div class="result-line"><div><span class="result-label" id="result-label">실행 결과</span><div class="live-value"><span id="live-value">—</span><small id="live-unit">분</small></div></div><button id="calculate" class="primary-button" type="button" disabled>계산 실행 <span aria-hidden="true">↗</span></button></div>
+              <div id="request-status" class="request-status" role="status" aria-live="polite">데이터와 적용 계약을 확인한 뒤 실행하세요.</div>
+              <details id="response-detail"><summary>응답과 집계 근거 보기</summary><pre id="response-json">아직 실행한 요청이 없습니다.</pre></details>
+            </div>
+          </div>
+        </section>
+
+        <div class="side-column">
+          <section id="verification-section" class="panel" aria-labelledby="verification-title">
+            <div class="panel-heading"><div><h2 id="verification-title">저장된 검증 기록</h2><p class="section-description">저장된 P2/D2 검증 범위와 현재 파일 해시를 대조합니다.</p></div><span class="plain-tag">BE + 흐름</span></div>
+            <div class="verification-controls"><label class="sr-only" for="record">확인할 검증 기록</label><select id="record"><option value="p2">P2 최신 검증</option><option value="p1">P1 이전 검증</option><option value="failure">의도적 실패 검증</option></select><button id="verify" class="secondary-button" type="button">기록 확인</button></div>
+            <div id="verification-status" class="verification-state" role="status">기록을 선택하고 확인하세요.</div>
+          </section>
+          <section class="panel activity-panel" aria-label="실행 기록">
+            <div class="activity-header"><h2>실행 기록</h2><span>이 브라우저 세션</span></div>
+            <ol id="activity-list"><li><span class="activity-time">—</span><span>데모 준비 중</span></li></ol>
+          </section>
+        </div>
+      </div>
+      <footer>hkit / Engineering workspace <span>PRD · EDA · Explain · FE · BE</span></footer>
+    </main>
+  </div>
+</body>
+</html>

@@ -1,0 +1,27 @@
+{
+  "simulation": true,
+  "decisions": [
+    {
+      "id": "SIM-APPROVE-01",
+      "state": "approved",
+      "from_prd": "P1",
+      "to_prd": "P2",
+      "question": "Confirm observation_id as the logical observation identity and reject duplicate input IDs.",
+      "actor": "simulated-user"
+    },
+    {
+      "id": "SIM-REJECT-01",
+      "state": "rejected",
+      "from_prd": "P1",
+      "to_prd": "P2",
+      "actor": "simulated-user"
+    },
+    {
+      "id": "SIM-PENDING-01",
+      "state": "pending",
+      "from_prd": "P1",
+      "to_prd": "P2",
+      "actor": "simulated-user"
+    }
+  ]
+}

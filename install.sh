@@ -1,25 +1,33 @@
 #!/usr/bin/env bash
 # Safe non-overwriting install into an existing task workspace. No network, git, or external writes.
 set -euo pipefail
-ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)"
 TARGET="${1:-.}"
 if [ ! -d "$TARGET" ]; then
   echo "Target directory does not exist: $TARGET" >&2
   exit 2
 fi
-TARGET="$(cd "$TARGET" && pwd)"
+TARGET="$(cd "$TARGET" && pwd -P)"
 if [ "$ROOT" = "$TARGET" ]; then
   echo "Run against a separate task workspace, not the kit's own directory." >&2
   exit 2
 fi
 copy_if_missing() {
   local src="$1" dest="$2"
-  if [ -e "$dest" ]; then
+  if [ -e "$dest" ] || [ -L "$dest" ]; then
     echo "KEEP   $dest (already exists)"
     return 0
   fi
-  mkdir -p "$(dirname "$dest")"
-  cp "$src" "$dest"
+  local parent="${dest%/*}"
+  while [ "$parent" != "$TARGET" ]; do
+    if [ -L "$parent" ]; then
+      echo "SKIP   $dest (linked parent: $parent)"
+      return 0
+    fi
+    parent="${parent%/*}"
+  done
+  mkdir -p "${dest%/*}"
+  cp -R "$src" "$dest"
   echo "CREATE $dest"
 }
 install_working_contract() {
@@ -27,9 +35,9 @@ install_working_contract() {
   local primary="$TARGET/AGENTS.md"
   local fallback="$TARGET/HYNIX_KIT_GUIDE.md"
 
-  if [ ! -e "$primary" ]; then
+  if [ ! -e "$primary" ] && [ ! -L "$primary" ]; then
     copy_if_missing "$src" "$primary"
-  elif cmp -s "$src" "$primary"; then
+  elif [ -f "$primary" ] && cmp -s "$src" "$primary"; then
     echo "KEEP   $primary (kit contract already installed)"
   else
     echo "KEEP   $primary (existing project instructions)"
@@ -39,17 +47,16 @@ install_working_contract() {
 install_working_contract
 copy_if_missing "$ROOT/templates/SPEC.md" "$TARGET/SPEC.md"
 copy_if_missing "$ROOT/templates/EVIDENCE.md" "$TARGET/EVIDENCE.md"
+for doc in "$ROOT"/templates/docs/*.md; do
+  copy_if_missing "$doc" "$TARGET/docs/$(basename "$doc")"
+done
 for d in "$ROOT"/.agents/skills/*; do
   [ -d "$d" ] || continue
   name="$(basename "$d")"
-  dest="$TARGET/.agents/skills/$name"
-  if [ -e "$dest" ]; then
-    echo "KEEP   $dest (already exists)"
-  else
-    mkdir -p "$(dirname "$dest")"
-    cp -R "$d" "$dest"
-    echo "CREATE $dest"
-  fi
+  copy_if_missing "$d" "$TARGET/.agents/skills/$name"
+done
+for agent in "$ROOT"/.codex/agents/*.toml; do
+  copy_if_missing "$agent" "$TARGET/.codex/agents/$(basename "$agent")"
 done
 cat <<'MSG'
 

@@ -1,0 +1,28 @@
+{
+  "revision": "P1",
+  "kpi": {
+    "id": "K1",
+    "formula": "sum(demand * wait_minutes) / sum(demand)",
+    "unit": "minutes",
+    "direction": "lower"
+  },
+  "hypotheses": [
+    {
+      "id": "H1",
+      "claim": "Each valid input row represents an independent observation."
+    }
+  ],
+  "required_ac": [
+    "R1-AC1",
+    "R1-AC2",
+    "R2-AC1"
+  ],
+  "input_policy": {
+    "grain": "row",
+    "duplicates": "count_all"
+  },
+  "period": {
+    "start": "2026-11-01",
+    "end": "2026-11-03"
+  }
+}
