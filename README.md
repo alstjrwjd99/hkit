@@ -33,7 +33,7 @@ codex
 
 FE는 표시할 정보, 여백을 줄인 무채색 배치, 중요도별 배경, 버튼 강조, 컴포넌트별 두 색 점검 순으로 화면을 만든다. 메인 컬러는 착수할 때 골라 두고 배치가 정해진 뒤 주 버튼에 적용한다. 과제와 기존 앱에 테마가 없으면 중립색을 쓰고, 특정 브랜드를 원하면 첫 요청에 “하이닉스 테마” 또는 “크래프톤 테마”를 덧붙인다.
 
-키트에는 중립 버튼색과 두 브랜드 프리셋이 들어 있다. 하이닉스 프리셋은 SK Red를, 크래프톤 프리셋은 KRAFTON Black을 주 버튼색으로 쓴다. [키트 색상 토큰](.agents/skills/frontend/assets/theme.css) · [SK하이닉스 CI](https://www.skhynix.com/company/UI-FR-CP0402/) · [크래프톤 브랜드 가이드](https://www.krafton.com/wp-content/uploads/2021/07/20210721_KRAFTON_BrandGuide_Ex_Kr.pdf#page=22)
+키트에는 중립 메인 컬러(파랑), 성공·주의·실패 상태색과 두 브랜드 프리셋이 들어 있다. 하이닉스 프리셋은 SK Red를, 크래프톤 프리셋은 KRAFTON Black을 주 버튼색으로 쓴다. [키트 색상 토큰](.agents/skills/frontend/assets/theme.css) · [SK하이닉스 CI](https://www.skhynix.com/company/UI-FR-CP0402/) · [크래프톤 브랜드 가이드](https://www.krafton.com/wp-content/uploads/2021/07/20210721_KRAFTON_BrandGuide_Ex_Kr.pdf#page=22)
 
 ### BE 유스케이스 테스트
 

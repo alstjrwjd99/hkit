@@ -65,6 +65,7 @@ function invalidate(message) {
   $("calculate").textContent = "계산 실행 ↗";
   $("pipeline-result").textContent = state.hasRun ? "재계산 필요" : "실행 전";
   $("request-status").textContent = message;
+  delete $("request-status").dataset.state;
   if (state.hasRun) {
     $("result-label").textContent = "이전 실행값 · 재계산 필요";
     $("live-value").classList.add("stale-value");
@@ -99,6 +100,7 @@ function renderRows() {
     const label = document.createElement("span");
     label.className = "observation-state";
     label.textContent = counts.get(row.observation_id) > 1 ? "중복 후보" : "고유 관측";
+    label.dataset.state = counts.get(row.observation_id) > 1 ? "warn" : "ok";
     status.append(label);
     tr.append(status);
     return tr;
@@ -128,6 +130,7 @@ function renderCompareRows(id, rows) {
     const label = document.createElement("span");
     label.className = "observation-state";
     label.textContent = counts.get(row.observation_id) > 1 ? "중복 후보" : "고유 관측";
+    label.dataset.state = counts.get(row.observation_id) > 1 ? "warn" : "ok";
     status.append(label);
     tr.append(status);
     return tr;
@@ -176,6 +179,7 @@ async function calculate() {
   $("calculate").disabled = true;
   $("calculate").textContent = "계산 중…";
   $("request-status").textContent = "로컬 BE API에서 입력과 계약을 검증하고 있습니다.";
+  delete $("request-status").dataset.state;
   try {
     const response = await api("/api/kpi/" + revision, {
       method: "POST",
@@ -194,6 +198,7 @@ async function calculate() {
       $("live-value").textContent = number.format(response.body.kpi);
       $("live-unit").textContent = "분";
       $("result-label").textContent = "현재 실행 결과";
+      $("request-status").dataset.state = "ok";
       $("request-status").textContent = "HTTP 200 · " + response.body.rows_used + "행 · 분자 " + response.body.numerator + " / 분모 " + response.body.denominator;
       $("pipeline-result").textContent = "계산 완료 · HTTP 200";
       log(expected.prd.revision + " / " + expected.contract.revision + " 계산 · " + number.format(response.body.kpi) + "분");
@@ -204,12 +209,14 @@ async function calculate() {
       const message = response.body.error?.message || "입력을 확인하세요.";
       const detail = validationMessage(message);
       $("request-status").textContent = "HTTP " + response.status + " · " + detail;
+      $("request-status").dataset.state = "error";
       $("pipeline-result").textContent = "검증 실패 · HTTP " + response.status;
       log("입력 검증 실패 · HTTP " + response.status);
     }
   } catch (error) {
     if (error.name === "AbortError" || version !== state.requestVersion) return;
     $("request-status").textContent = "요청 실패 · " + error.message + " 다시 실행할 수 있습니다.";
+    $("request-status").dataset.state = "error";
     $("pipeline-result").textContent = "연결 확인 필요";
     $("live-value").textContent = "—";
     $("live-unit").textContent = "";
@@ -233,12 +240,14 @@ async function verifyRecord() {
   const version = ++state.verificationVersion;
   $("verify").disabled = true;
   $("verification-status").textContent = "저장된 검증 범위와 현재 파일을 확인하고 있습니다.";
+  delete $("verification-status").dataset.state;
   try {
     const response = await api("/api/evidence?record=" + encodeURIComponent(record));
     if (version !== state.verificationVersion) return;
     if (response.status !== 200) throw new Error(response.body.error?.message || "검증 기록을 읽을 수 없습니다.");
     if (!response.body.available) {
       $("verification-status").textContent = "미검증 · " + (response.body.message || "연결된 검증 기록이 없습니다.");
+      $("verification-status").dataset.state = "warn";
       log("저장된 검증 기록 미연결");
       return;
     }
@@ -251,6 +260,7 @@ async function verifyRecord() {
       CHANGED_RESULTS: "실행 결과 파일이 변경됐습니다.",
       INVALID_ARTIFACT: "검증 자료를 확인해야 합니다.",
     };
+    $("verification-status").dataset.state = verdict.status === "PASS" ? "ok" : "error";
     $("verification-status").textContent = verdict.status === "PASS"
       ? "PASS · " + verdict.checks + "개 확인 · P2 / D2 검증 범위와 현재 파일 일치"
       : "BLOCKED · " + verdict.reason + " · " + (reasons[verdict.reason] || "검증 자료를 확인하세요.");
@@ -258,6 +268,7 @@ async function verifyRecord() {
   } catch (error) {
     if (version !== state.verificationVersion) return;
     $("verification-status").textContent = "확인 실패 · " + error.message;
+    $("verification-status").dataset.state = "error";
   } finally {
     if (version === state.verificationVersion) $("verify").disabled = false;
   }
@@ -321,6 +332,7 @@ $("record").addEventListener("change", () => {
   state.verificationVersion += 1;
   $("verify").disabled = false;
   $("verification-status").textContent = "선택한 검증 기록을 확인하세요.";
+  delete $("verification-status").dataset.state;
 });
 $("theme").addEventListener("change", () => {
   if ($("theme").value === "neutral") delete document.documentElement.dataset.hkitBrand;

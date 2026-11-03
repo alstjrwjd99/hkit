@@ -1,15 +1,25 @@
 * {
   box-sizing: border-box;
 }
+/* 예제 화면 전용 선·보조 글자·사이드바 색. 흰 카드 + 얇은 테두리 + 진한 사이드바 */
+:root {
+  --line: #e3e6eb;
+  --muted: #6b7280;
+  --nav: #0f1d3d;
+  --nav-ink: #c7cfe0;
+}
 html {
   scroll-behavior: smooth;
 }
 body {
+  display: grid;
+  grid-template-columns: 208px minmax(0, 1fr);
+  min-height: 100vh;
   margin: 0;
-  background: var(--hkit-surface-secondary);
+  background: var(--hkit-surface);
   color: var(--hkit-ink);
   font-family: "Segoe UI", "Malgun Gothic", sans-serif;
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1.45;
 }
 button, select, input {
@@ -42,7 +52,7 @@ h1 {
   line-height: 1.2;
 }
 h2 {
-  font-size: 15px;
+  font-size: 16px;
   letter-spacing: -.3px;
 }
 small {
@@ -66,12 +76,14 @@ small {
   color: #171717;
 }
 .app-header {
+  position: sticky;
+  top: 0;
   display: flex;
-  align-items: center;
-  gap: 20px;
-  min-height: 44px;
-  padding: 6px 14px;
-  background: #171717;
+  flex-direction: column;
+  gap: 18px;
+  height: 100vh;
+  padding: 18px 14px;
+  background: var(--nav);
   color: #fff;
 }
 .wordmark {
@@ -101,22 +113,25 @@ small {
   letter-spacing: 1px;
 }
 .project-name {
+  color: var(--nav-ink);
   font-size: 12px;
 }
 nav {
   display: flex;
-  align-items: center;
-  gap: 3px;
+  flex-direction: column;
+  gap: 4px;
 }
 .nav-link {
-  padding: 5px 10px;
-  border-radius: 3px;
-  font-size: 12px;
+  padding: 9px 12px;
+  border-radius: 6px;
+  color: var(--nav-ink);
+  font-size: 14px;
   text-decoration: none;
 }
 .nav-link.active {
-  background: #fff;
-  color: #171717;
+  background: var(--hkit-action);
+  color: var(--hkit-on-action);
+  font-weight: 600;
 }
 .nav-link:hover {
   text-decoration: underline;
@@ -125,7 +140,8 @@ nav {
   display: flex;
   align-items: center;
   gap: 8px;
-  margin-left: auto;
+  margin-top: auto;
+  color: var(--nav-ink);
   font-size: 12px;
 }
 select {
@@ -137,7 +153,7 @@ select {
   font-size: 12px;
 }
 main {
-  padding: 12px 14px 8px;
+  padding: 20px 24px 12px;
 }
 .boot-status {
   padding: 7px 10px;
@@ -153,9 +169,10 @@ main {
   grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 8px;
   margin: 0 0 8px;
-  padding: 7px 10px;
-  border-radius: 4px;
-  background: var(--hkit-surface-key);
+  padding: 8px 12px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--hkit-surface);
   color: var(--hkit-ink);
   list-style: none;
 }
@@ -165,7 +182,7 @@ main {
   gap: 8px;
 }
 .pipeline li:not(:last-child) {
-  border-right: 1px solid currentColor;
+  border-right: 1px solid var(--line);
 }
 .step-number {
   font-size: 12px;
@@ -180,7 +197,9 @@ main {
   font-size: 12px;
 }
 .panel {
-  padding: 11px 12px;
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
   background: var(--hkit-surface);
   color: var(--hkit-ink);
   scroll-margin-top: 8px;
@@ -231,15 +250,16 @@ table {
 }
 th {
   padding: 5px;
-  border-top: 1px solid currentColor;
-  border-bottom: 1px solid currentColor;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  color: var(--muted);
   font-size: 12px;
   font-weight: 500;
   text-align: left;
 }
 td {
   padding: 4px 5px;
-  border-bottom: 1px dotted currentColor;
+  border-bottom: 1px solid var(--line);
   font-variant-numeric: tabular-nums;
 }
 /* 넓은 화면에서 짧은 열은 내용 폭에 맞추고 남는 폭은 마지막 열이 받는다. 폭 100%로 고르게 나누면 열 사이가 벌어진다 */
@@ -359,9 +379,9 @@ td input {
   color: #fff;
 }
 .request-status {
-  padding: 6px 9px;
-  border-radius: 3px;
-  background: var(--hkit-surface-key);
+  padding: 7px 10px;
+  border-radius: 6px;
+  background: var(--hkit-surface-secondary);
   color: var(--hkit-ink);
   font-size: 13px;
 }
@@ -400,10 +420,10 @@ pre {
   min-width: 0;
 }
 .verification-state {
-  margin-top: 7px;
-  padding: 7px 9px;
-  border-radius: 3px;
-  background: var(--hkit-surface-key);
+  margin-top: 8px;
+  padding: 7px 10px;
+  border-radius: 6px;
+  background: var(--hkit-surface-secondary);
   color: var(--hkit-ink);
   font-size: 13px;
   line-height: 1.5;
@@ -460,6 +480,7 @@ footer {
 }
 .period {
   margin-left: 6px;
+  white-space: nowrap;
   font-size: 12px;
 }
 .period strong {
@@ -478,21 +499,6 @@ footer {
 .input-detail .table-scroll {
   margin-top: 6px;
 }
-.finding {
-  display: flex;
-  align-items: baseline;
-  gap: 10px;
-  margin-bottom: 8px;
-  padding: 8px 12px;
-  border-radius: 4px;
-  background: var(--hkit-surface-key);
-  color: var(--hkit-ink);
-  font-size: 13px;
-}
-.finding-number {
-  font-size: 12px;
-  font-weight: 600;
-}
 /* 핵심 판단이 두 정책의 비교라서 같은 모양의 열을 나란히 둔다. 적용 중인 정책 열은 윤곽으로 표시한다 */
 .compare {
   display: grid;
@@ -500,14 +506,22 @@ footer {
   gap: 8px;
 }
 .compare-col {
-  padding: 12px 14px;
-  border: 1px solid transparent;
-  border-radius: 4px 4px 0 0;
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
   background: var(--hkit-surface);
   color: var(--hkit-ink);
 }
+/* 적용 중인 정책은 메인 컬러 윤곽·글자와 '적용 중' 표시로 구별한다 */
 .compare-col.is-current {
-  border-color: currentColor;
+  border-color: var(--hkit-action);
+}
+.compare-col.is-current h2::after {
+  content: " · 적용 중";
+  color: var(--hkit-action);
+}
+.compare-col.is-current .live-value {
+  color: var(--hkit-action);
 }
 .compare-heading {
   display: flex;
@@ -535,10 +549,11 @@ footer {
   grid-template-columns: auto minmax(360px, 520px) minmax(0, 1fr);
   align-items: center;
   gap: 20px;
-  margin: 1px 0 10px;
-  padding: 10px 14px;
-  border-radius: 0 0 4px 4px;
-  background: var(--hkit-surface-key);
+  margin: 8px 0 10px;
+  padding: 12px 16px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--hkit-surface);
   color: var(--hkit-ink);
 }
 .decision-diff {
@@ -548,6 +563,7 @@ footer {
   font-size: 12px;
 }
 .decision-diff strong {
+  color: var(--hkit-action);
   font-size: 22px;
   font-variant-numeric: tabular-nums;
 }
@@ -581,6 +597,13 @@ footer {
   gap: 12px;
   margin-bottom: 6px;
   font-size: 12px;
+}
+.data-toolbar {
+  flex-wrap: wrap;
+  row-gap: 6px;
+}
+.data-toolbar > * {
+  white-space: nowrap;
 }
 .data-toolbar .text-button {
   margin-left: auto;
@@ -662,4 +685,46 @@ footer {
   html {
     scroll-behavior: auto;
   }
+}
+/* 상태 의미색: 진한 글자와 옅은 배경을 한 쌍으로 쓰고, 상태는 글자로도 적는다 */
+[data-state="ok"] {
+  background: var(--hkit-ok-soft);
+  color: var(--hkit-ok);
+}
+[data-state="warn"] {
+  background: var(--hkit-warn-soft);
+  color: var(--hkit-warn);
+}
+[data-state="error"] {
+  background: var(--hkit-danger-soft);
+  color: var(--hkit-danger);
+}
+/* 선택한 판단 버튼은 메인 컬러 윤곽을 바깥에 두른다 */
+.decision-actions [aria-pressed="true"] {
+  outline: 2px solid var(--hkit-action);
+  outline-offset: 2px;
+}
+.compare-heading p, .compare-detail, .section-description, .panel-note, .page-heading p, .activity-time {
+  color: var(--muted);
+}
+.primary-button, .secondary-button {
+  border-radius: 6px;
+}
+.secondary-button {
+  border-color: #c9ced6;
+}
+/* 관측 상태: 중복은 빨간 채움 pill, 고유는 회색 윤곽 pill */
+.observation-state {
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+.observation-state[data-state="warn"] {
+  border-color: var(--hkit-danger);
+  background: var(--hkit-danger);
+  color: #fff;
+}
+.observation-state[data-state="ok"] {
+  border-color: #c9ced6;
+  background: var(--hkit-surface);
+  color: var(--hkit-ink);
 }

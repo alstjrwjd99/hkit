@@ -4,14 +4,25 @@
   --hkit-surface: #ffffff;
   --hkit-surface-secondary: #f5f6f8;
   --hkit-ink: #171717;
-  --hkit-action: #1f2937;
+  /* 메인 컬러: 주 버튼 채움, 적용 중·선택된 대상의 윤곽과 핵심 값 글자 */
+  --hkit-action: #2454c6;
   --hkit-on-action: #ffffff;
+  --hkit-action-soft: #eaf0fd;
+  /* 상태 의미색: 진한 글자색과 옅은 배경을 한 쌍으로 쓴다. 테마와 무관하게 고정한다 */
+  --hkit-ok: #146c3a;
+  --hkit-ok-soft: #e6f4ea;
+  --hkit-warn: #8a4b00;
+  --hkit-warn-soft: #fff2dc;
+  --hkit-danger: #b3261e;
+  --hkit-danger-soft: #fdebea;
 }
 
 :root[data-hkit-brand="sk-hynix"] {
   --hkit-action: #ea002c;
+  --hkit-action-soft: #fdeaee;
 }
 
 :root[data-hkit-brand="krafton"] {
   --hkit-action: #000000;
+  --hkit-action-soft: #efefef;
 }
